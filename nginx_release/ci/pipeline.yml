@@ -1,16 +1,25 @@
 jobs:
 - name: job-upload-release
   plan:
+  - get: source-code
+    params:
+      depth: 1
   - config:
       image_resource:
         source:
           repository: starkandwayne/concourse
         type: docker-image
+      inputs:
+      - name: source-code
       platform: linux
       run:
-        args:
-        - Eventually I will upload a bosh release
-        path: echo
+        path: source-code/nginx_release/ci/tasks/upload-release.sh
     task: upload-release
   public: true
+resources:
+- name: source-code
+  source:
+    branch: master
+    uri: https://github.com/jcorbin1201/sw-concourse-training.git
+  type: git
 
